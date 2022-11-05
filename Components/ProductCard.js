@@ -11,7 +11,7 @@ export default function ProductCard(props) {
   return (
     <div className='product-card-wrapper col-md-4 col-lg-3 col-sm-6 col-12'>
       <div className='product' onClick={() => redirectTo(props.item._id,props.item.category)}>
-        <Image src={props.item.imageUrl} width="400" height="400"></Image>
+        <Image src={props.item.imageUrl} width="400" height="400" alt=''></Image>
         <div className='card-title'>{props.item.title}</div>
         <div className='card-content'>{props.item.description}</div>
       </div>

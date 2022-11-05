@@ -3,12 +3,12 @@ import Button from "./Button";
 import Image from "next/image";
 import itemImg from "../public/assets/images/item.jpeg";
 import Router, { useRouter } from "next/router";
-import { setUserInfo } from "../utils/Actions";
+import { setUserDetails, setUserInfo } from "../utils/Actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import useRazorpay from "react-razorpay";
-import APIUrls from "../pages/api";
+import APIUrls from "../utils/URL";
 import { SHIPROCKET_PASSWORD, SHIPROCKET_USERNAME } from "../credentials";
 import uuid from "react-uuid";
 import { E_COM_PASSWORD, E_COM_USERNAME } from "../env";
@@ -284,7 +284,7 @@ export default function ContactDetails() {
         if (response.razorpay_payment_id) {
           const result = await axios.post(`${APIUrls.create_order}`, {
             data: {
-              coupon_info: currentCouponinfo ? currentCouponinfo : "",
+              // coupon_info: currentCouponinfo ? currentCouponinfo : '',
               username: user.username,
               email: user.email,
               phone: currentOrderAddress.phone,
@@ -683,9 +683,8 @@ export default function ContactDetails() {
       alert.show("Please fill required fields", { type: "info" });
     } else {
       const prevAddress = getCookie("shipping_address");
-      // console.info("Previous Data", prevAddress);
-      // console.log(JSON.parse(prevAddress).data);
-      const prevAddressData = prevAddress && JSON.parse(prevAddress).data;
+      console.log(JSON.parse(prevAddress).data);
+      const prevAddressData = JSON.parse(prevAddress).data;
       let address = [];
       if (prevAddressData.length > 0 && userInfo.isDefault == true) {
         prevAddressData.map((d) => {
@@ -766,27 +765,6 @@ export default function ContactDetails() {
     return res;
   };
   const authShipRocket = () => {};
-  const handlePinCode = async () => {
-    console.info("Pin Code", userInfo.pinCode);
-    const url = `https://api.postalpincode.in/pincode/${userInfo.pinCode}`;
-
-    const res = await fetch(url);
-    const response = await res.json();
-    console.info("POST OFFICE", response[0]);
-    if (response[0].PostOffice && response[0].PostOffice.length > 0) {
-      await setUserDetails({
-        ...userInfo,
-        city: response[0].PostOffice[0].Block,
-        state: response[0].PostOffice[0].State,
-        country: response[0].PostOffice[0].Country,
-      });
-    } else {
-      alert.show("Sorry, we can't ship to this location", {
-        type: "error",
-      });
-    }
-    console.info("POST OFFICE", userInfo);
-  };
   const validatePin = () => {
     //e-com pin api here\
     setAuthorizationToken(null, null, null, null);
@@ -796,21 +774,21 @@ export default function ContactDetails() {
     data.append("pincode", currentOrderAddress.pinCode);
 
     var config = {
-      method: "GET",
-      url: `https://api.postalpincode.in/pincode/${currentOrderAddress.pinCode}`,
+      method: "post",
+      url: "https://api.ecomexpress.in/apiv2/pincode/",
+      data: data,
     };
 
     axios(config)
       .then(function (response) {
-        if (response.data.length > 0) {
-          handlePayment();
-        } else
+        if (response.data.length > 0) handlePayment();
+        else
           alert.show("Sorry, we can't ship to this location", {
             type: "error",
           });
       })
       .catch(function (error) {
-        console.info(error);
+        console.log(error);
         alert.show("Invalid PINCODE", {
           type: "error",
         });
@@ -834,7 +812,7 @@ export default function ContactDetails() {
             <div className="address-error">
               <h6 className="address-text">{orderError}</h6>
               {addressList && addressList.length > 0
-                ? addressList.map((d) => <p>{d.country}</p>)
+                ? addressList.map((d, i) => <p key={i}>{d.country}</p>)
                 : null}
             </div>
           )}
@@ -846,7 +824,10 @@ export default function ContactDetails() {
               user.shipping_address.map((d, index) => {
                 console.log(d);
                 return (
-                  <div className="address-wrapper col-12 col-sm-6 col-md-4 d-flex">
+                  <div
+                    className="address-wrapper col-12 col-sm-6 col-md-4 d-flex"
+                    key={index}
+                  >
                     <input
                       type="checkbox"
                       className="mt-1"
@@ -898,7 +879,6 @@ export default function ContactDetails() {
                 <select
                   name="country"
                   id="country"
-                  value={userInfo.country}
                   onChange={(e) =>
                     setUserDetails({
                       ...userInfo,
@@ -907,7 +887,11 @@ export default function ContactDetails() {
                   }
                 >
                   {countryList
-                    ? countryList.map((d) => <option value={d}>{d}</option>)
+                    ? countryList.map((d, i) => (
+                        <option value={d} key={i}>
+                          {d}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -995,7 +979,6 @@ export default function ContactDetails() {
                     City<span className="required-field">*</span>
                   </label>
                   <input
-                    value={userInfo.city}
                     type="text"
                     className="text-input"
                     onChange={(e) =>
@@ -1012,17 +995,16 @@ export default function ContactDetails() {
                   </label>
                   <input
                     type="number"
-                    maxLength="6"
+                    maxLength={6}
                     className="text-input"
-                    // max="6"
-                    onBlur={handlePinCode}
+                    max="6"
                     onChange={(e) =>
                       setUserDetails({
                         ...userInfo,
                         pinCode: e.target.value,
                       })
                     }
-                  />
+                  ></input>
                 </div>
               </div>
               <div className="col-12">
@@ -1031,7 +1013,6 @@ export default function ContactDetails() {
                     State<span className="required-field">*</span>
                   </label>
                   <input
-                    value={userInfo.state}
                     type="text"
                     className="text-input"
                     onChange={(e) =>
@@ -1106,12 +1087,13 @@ export default function ContactDetails() {
                         sum + parseFloat(value.salePrice) * parseInt(value.qty);
                       console.log(sum);
                       return (
-                        <div className="item-wrapper">
+                        <div className="item-wrapper" key={key}>
                           {value.image_src ? (
                             <Image
                               src={value.image_src}
                               height="100"
                               width="100"
+                              alt=""
                             ></Image>
                           ) : (
                             <span className="text-no-preview">

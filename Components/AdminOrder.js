@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import APIUrls from "../pages/api";
+import APIUrls from "../utils/URL";
 import Image from "next/image";
 import Button from "react-bootstrap/Button";
 import { useAlert } from "react-alert";
@@ -12,6 +12,8 @@ import { setUserInfo } from "../utils/Actions";
 import { E_COM_PASSWORD, E_COM_USERNAME } from "../env";
 import setAuthorizationToken from "../utils/AuthHeaders";
 import { generateInvoice } from "../utils/Pdf/helper";
+
+
 export default function AdminOrder() {
   const [show, setShow] = useState(false);
   const user = useSelector((state) => state.user);
@@ -37,9 +39,12 @@ export default function AdminOrder() {
   const [displayImage, setDisplayImage] = useState();
   const [displayImageDesktop, setDisplayImageDesktop] = useState();
   const [isActive, setIsActive] = useState(true);
-  useEffect(async () => {
-    // await fetchToken();
-    await fetchDbOrder();
+  useEffect(() => {
+    const call = async () => {
+      // await fetchToken();
+      await fetchDbOrder();
+    };
+    call();
   }, []);
   //custom pagination vars
   const [currentPage, setCurrentPage] = useState(1);
@@ -273,39 +278,39 @@ export default function AdminOrder() {
     // var data = JSON.stringify({
     //   "ids": new Array(idx)
     // });
-    console.log("DATA",info)
+    console.log("DATA", info);
     let data = {
-      bill_to_address:info.address,
-      ship_to_address:info.address,
-      pdf_layout:"0",
-      ...info
-    }
+      bill_to_address: info.address,
+      ship_to_address: info.address,
+      pdf_layout: "0",
+      ...info,
+    };
     generateInvoice(data);
   };
   const trackOrder = (awb_id) => {
     var data = new FormData();
     data.append("username", E_COM_USERNAME);
     data.append("password", E_COM_PASSWORD);
-    data.append('awb', awb_id.toString());
+    data.append("awb", awb_id.toString());
     setAuthorizationToken(null, null, null, null);
-    
+
     var config = {
-      method: 'post',
-      url: 'https://plapi.ecomexpress.in/track_me/api/mawbd/',
-      data : data
+      method: "post",
+      url: "https://plapi.ecomexpress.in/track_me/api/mawbd/",
+      data: data,
     };
-    
+
     axios(config)
-    .then(function (response) {
-      var XMLParser = require('react-xml-parser');
-      var xml = new XMLParser().parseFromString(response.data);    // Assume xmlText contains the example XML
-      console.log(xml);
-      setXMLData(xml.children[0].children);
-      setIsTrackingModal(true);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (response) {
+        var XMLParser = require("react-xml-parser");
+        var xml = new XMLParser().parseFromString(response.data); // Assume xmlText contains the example XML
+        console.log(xml);
+        setXMLData(xml.children[0].children);
+        setIsTrackingModal(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   const cancelOrder = (idx) => {
     var data = new FormData();
@@ -559,7 +564,7 @@ export default function AdminOrder() {
             {productList && productList.length > 0 ? (
               productList.map((d, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>{d.transactionId ? d.transactionId : "-"}</td>
                     <td className="th-center">{d.orderId ? d.orderId : "-"}</td>
                     <td className="th-center">{d.awb_id ? d.awb_id : "-"}</td>
@@ -582,11 +587,12 @@ export default function AdminOrder() {
                     </td>
                     <td>
                       {d.items.length > 0
-                        ? d.items.map((data) => {
+                        ? d.items.map((data, i) => {
                             return (
                               <div
                                 className="item-wrapper"
                                 style={{ minHeight: "50px" }}
+                                key={i}
                               >
                                 <div className="img-wrapper">
                                   {/* {
@@ -673,7 +679,7 @@ export default function AdminOrder() {
               })
             ) : (
               <tr>
-                <td colspan="13" className="th-center">
+                <td colSpan="13" className="th-center">
                   No data
                 </td>
               </tr>
@@ -758,7 +764,7 @@ export default function AdminOrder() {
                   type="text"
                   value={bannerTitle}
                   onChange={(e) => setBannerTitle(e.target.value)}
-                />
+                ></input>
               </div>
               <div className="input-wrapper">
                 <label>
@@ -839,17 +845,17 @@ export default function AdminOrder() {
         </Modal.Header>
         <Modal.Body>
           <div className="modal-form">
-            {
-              xmlData && xmlData.length>0 ? 
-                <ul>
-                  {
-                    xmlData.filter(d=>d.attributes.name=='tracking_status').map(d => {
-                      return <li>{d.value}</li>
-                    })
-                  }
-                </ul>
-              :('No shipping records!')
-            }
+            {xmlData && xmlData.length > 0 ? (
+              <ul>
+                {xmlData
+                  .filter((d) => d.attributes.name == "tracking_status")
+                  .map((d, i) => {
+                    return <li key={i}>{d.value}</li>;
+                  })}
+              </ul>
+            ) : (
+              "No shipping records!"
+            )}
           </div>
         </Modal.Body>
       </Modal>
