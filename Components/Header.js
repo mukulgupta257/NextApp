@@ -225,6 +225,7 @@ export default function Header() {
               width={135}
               height={35}
               quality={100}
+              alt=""
             ></Image>
           </div>
         </div>

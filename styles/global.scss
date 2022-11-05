@@ -30,6 +30,18 @@ body::-webkit-scrollbar {
 #__next {
     position: relative;
 }
+.footer-text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    
+}
+.footer-text{
+    a {
+            text-decoration: none;
+            padding: 0px;
+            color: #000;
+        }
+}
 .required-field {
     margin-left: 1px;
     padding: 0;
