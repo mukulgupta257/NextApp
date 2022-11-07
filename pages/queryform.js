@@ -12,7 +12,7 @@ const InitalFields = {
 
 const ContactUsPage = () => {
   const [formFields, setFormFields] = useState(InitalFields);
-
+  const [LeadStatus, setLeadStatus] = useState("");
   const handleBlur = (e) => {
     console.info(e.target.name);
     var FormFieldsUpdate = {
@@ -26,7 +26,9 @@ const ContactUsPage = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    const res = "Thankyou we will get back to you shortly";
     console.info("State", formFields);
+    setLeadStatus(res);
   };
   return (
     <>
@@ -72,6 +74,13 @@ const ContactUsPage = () => {
           />
           <input type={"submit"} value="Submit" className={styles.Submit} />
         </form>
+        <span
+          className={
+            LeadStatus.includes("Thankyou") ? styles.sucess : styles.error
+          }
+        >
+          {LeadStatus}
+        </span>
       </div>
       <Footer />
     </>

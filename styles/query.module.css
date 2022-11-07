@@ -36,11 +36,11 @@
 }
 .queryTextArea {
   min-width: 100%;
-  margin-bottom: 15px;
   outline: none;
   border: 1px solid #7c7c7c;
   border-radius: 4px;
   min-height: 200px;
+  margin-bottom: 15px;
 }
 .Submit {
   height: 40px;
@@ -48,6 +48,15 @@
   border: none;
   width: 90%;
   border-radius: 10px;
+  margin-bottom: 15px;
+}
+.error {
+  color: #ff0000;
+  font-size: 12px;
+}
+.sucess {
+  color: #008000;
+  font-size: 12px;
 }
 @media screen and (max-width: 1020px) {
   .QueryFormSubTitle {
