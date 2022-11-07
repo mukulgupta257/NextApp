@@ -30,3 +30,13 @@
 .Body li:nth-child(4) {
   font-weight: 700;
 }
+@media screen and (max-width: 1020px) {
+  .Body {
+    max-width: 100%;
+    width: 100%;
+    font-size: 14px;
+  }
+  .Body ul {
+    padding: 0px;
+  }
+}
