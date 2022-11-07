@@ -15,7 +15,9 @@ export default function Footer() {
           <span className="footer-text">Track your order</span>
         </div>
         <div className="col-6 col-md-2 align-items-end align-items-md-start">
-          <span className="footer-text">Contact Us</span>
+          <span className="footer-text">
+            <Link href="/queryform">Contact Us</Link>
+          </span>
           <span className="footer-text">Privacy Statement</span>
           <span className="footer-text">Terms and Conditions</span>
         </div>
