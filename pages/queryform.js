@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
-import styles from "../styles/aboutus.module.css";
+import styles from "../styles/query.module.css";
 
 const InitalFields = {
   Name: "",
@@ -21,24 +21,27 @@ const ContactUsPage = () => {
       Phone: e.target.name === "Phone" ? e.target.value : formFields.Phone,
       Query: e.target.name === "Query" ? e.target.value : formFields.Query,
     };
-    FormFieldsUpdate.Phone = parseInt(FormFieldsUpdate.Phone);
     setFormFields(FormFieldsUpdate);
     console.info("Local", FormFieldsUpdate);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.info("State", formFields);
   };
   return (
     <>
       <Header />
-      <div className={styles.AboutUsRoot}>
-        <span className={styles.AboutUsTitle}>Raise A Query</span>
-        <span className={styles.AboutUsSubTitle}>
-          We will revert to you as soon as possible
+      <div className={styles.QueryFormRoot}>
+        <span className={styles.QueryFormTitle}>Raise A Query</span>
+        <span className={styles.QueryFormSubTitle}>
+          {"( We will revert to you as soon as possible )"}
         </span>
-        <form name="ContactForm" id="QueryForm">
+        <form name="ContactForm" id={styles.QueryForm} onSubmit={handleSubmit}>
           <label>Name</label>
           <input
             name="Name"
             type="text"
-            className="queryInput"
+            className={styles.queryInput}
             onBlur={handleBlur}
             required
           />
@@ -46,7 +49,7 @@ const ContactUsPage = () => {
           <input
             name="Email"
             type="Email"
-            className="queryInput"
+            className={styles.queryInput}
             onBlur={handleBlur}
             required
           />
@@ -54,7 +57,7 @@ const ContactUsPage = () => {
           <input
             name="Phone"
             type="tel"
-            className="queryInput"
+            className={styles.queryInput}
             onBlur={handleBlur}
             maxLength={10}
             minLength={10}
@@ -63,11 +66,11 @@ const ContactUsPage = () => {
           <label>Query</label>
           <textarea
             name="Query"
-            className="queryTextArea"
+            className={styles.queryTextArea}
             onBlur={handleBlur}
             required
           />
-          <input type={"submit"} value="Submit" />
+          <input type={"submit"} value="Submit" className={styles.Submit} />
         </form>
       </div>
       <Footer />

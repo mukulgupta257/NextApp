@@ -1,0 +1,62 @@
+.QueryFormRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100%;
+}
+.QueryFormTitle {
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 700;
+  margin-bottom: 0px;
+}
+#QueryForm {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+  width: 50%;
+  align-items: center;
+  padding: 0px;
+}
+#QueryForm label {
+  min-width: 100%;
+  padding: 0px;
+  margin: 0px;
+  font-size: 12px;
+  color: #444444;
+}
+.queryInput {
+  min-width: 100%;
+  margin-bottom: 15px;
+  outline: none;
+  border: 1px solid #7c7c7c;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 4px;
+}
+.queryTextArea {
+  min-width: 100%;
+  margin-bottom: 15px;
+  outline: none;
+  border: 1px solid #7c7c7c;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.Submit {
+  height: 40px;
+  font-size: 20px;
+  border: none;
+  width: 90%;
+  border-radius: 10px;
+}
+@media screen and (max-width: 1020px) {
+  .QueryFormSubTitle {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  #QueryForm {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+}
