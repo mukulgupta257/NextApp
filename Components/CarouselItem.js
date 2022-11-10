@@ -10,6 +10,7 @@ export default function CarouselItem(props) {
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
+
   return (
     <div className="carousel-wrapper">
       <Carousel activeIndex={index} onSelect={handleSelect}>

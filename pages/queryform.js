@@ -24,11 +24,20 @@ const ContactUsPage = () => {
     setFormFields(FormFieldsUpdate);
     console.info("Local", FormFieldsUpdate);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = "Thankyou we will get back to you shortly";
     console.info("State", formFields);
-    setLeadStatus(res);
+    const response = await fetch("/api/createquery", {
+      method: "POST",
+      body: JSON.stringify(formFields),
+    });
+    const result = await response.json();
+    console.info(result.message);
+    var msg = [
+      "Thankyou we will get back to you shortly.",
+      "There Was Some Error Please Try Again.",
+    ];
+    setLeadStatus(msg[result.message === "Sucess" ? 0 : 1]);
   };
   return (
     <>
@@ -58,7 +67,7 @@ const ContactUsPage = () => {
           <label>Contact Number</label>
           <input
             name="Phone"
-            type="tel"
+            type="number"
             className={styles.queryInput}
             onBlur={handleBlur}
             maxLength={10}

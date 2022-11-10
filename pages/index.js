@@ -1,22 +1,38 @@
 import Head from "next/head";
-import Image from "next/image";
 import CardWrapper from "../Components/CardWrapper";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
-import itemImg from "../public/assets/images/item.jpeg";
 import BrandAdvertisement from "../Components/BrandAdvertisement";
 import Footer from "../Components/Footer";
 import CarouselItem from "../Components/CarouselItem";
 import Header from "../Components/Header";
 import axios from "axios";
 import APIUrls from "../utils/URL";
+import Logo from "../public/assets/images/ShortLogo.png";
 
 export default function Home() {
   const [cardList, setCardList] = useState({});
   const [bannerData, setBannerData] = useState();
   useEffect(() => {
-    fetchProducts();
+    try {
+      fetchProducts();
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
+  const Img = ({ prop }) => {
+    return (
+      <>
+        {prop.map((data, i) => {
+          return (
+            <>
+              <img src={data.desktopURL} alt="" className="BannerImages" />
+            </>
+          );
+        })}
+      </>
+    );
+  };
   const fetchProducts = () => {
     const urlParams = encodeURIComponent(
       JSON.stringify(["outdoor", "new", "bestseller"])
@@ -30,13 +46,16 @@ export default function Home() {
       setBannerData(res.data.data.banners);
     });
   };
+  console.info("bannerData", bannerData);
   return (
     <>
       <Head>
         <title>Vedayuu</title>
+        <link rel="icon" type="image/x-icon" href={Logo} />
       </Head>
       <Header />
-      {bannerData && <CarouselItem data={bannerData} />}
+      {bannerData && <Img prop={bannerData} />}
+      {/* {bannerData && <CarouselItem data={bannerData} />} */}
       <CardWrapper
         title="Bestsellers"
         category={"bestseller"}
