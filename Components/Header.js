@@ -1178,17 +1178,6 @@ export default function Header() {
       <div className="header-2">
         {categoryList ? (
           <ul className="header-list">
-            <li
-              className={
-                window.location.href.split("/").length <= 4 ? "active" : ""
-              }
-              onClick={() => {
-                console.info(window.location.href.split("/"));
-                redirectTo(`/`);
-              }}
-            >
-              All Products
-            </li>
             {categoryList
               .filter((d) => d.isActive == true)
               .map((value, key) => {

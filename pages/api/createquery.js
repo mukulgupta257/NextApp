@@ -6,7 +6,7 @@ var db_url2 = "mongodb://localhost:27017/TestNew";
 
 export default async function Order(req, res) {
   await mongoose
-    .connect(db_url2, {
+    .connect(db_url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })

@@ -36,12 +36,8 @@ function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(true);
   // console.log = function () { }
   useEffect(() => {
-    try {
-      getCategoryList();
-      verifyToken();
-    } catch (err) {
-      console.info(err);
-    }
+    getCategoryList();
+    verifyToken();
   }, []);
 
   const verifyToken = () => {

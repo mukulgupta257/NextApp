@@ -106,7 +106,6 @@ export default function Footer() {
                 />
               </svg>
             </a>
-            
           </div>
         </div>
       </div>
